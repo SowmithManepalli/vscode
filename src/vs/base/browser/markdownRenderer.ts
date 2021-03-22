@@ -30,6 +30,7 @@ export interface MarkdownRenderOptions extends FormattedTextRenderOptions {
 	codeBlockRenderer?: (modeId: string, value: string) => Promise<HTMLElement>;
 	asyncRenderCallback?: () => void;
 	baseUrl?: URI;
+	loadImages?: boolean;
 }
 
 const _ttpInsane = window.trustedTypes?.createPolicy('insane', {
@@ -96,6 +97,9 @@ export function renderMarkdown(markdown: IMarkdownString, options: MarkdownRende
 
 	const renderer = new marked.Renderer();
 	renderer.image = (href: string, title: string, text: string) => {
+		if (!markedOptions.loadImages) {
+			return ''
+		}
 		let dimensions: string[] = [];
 		let attributes: string[] = [];
 		if (href) {
